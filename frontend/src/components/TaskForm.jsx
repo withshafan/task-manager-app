@@ -47,24 +47,30 @@ function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing
       <h2>{currentTask ? 'Edit Task' : 'New Task'}</h2>
       <input
         type="text"
+        name="title"
+        id="title"
         placeholder="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
       />
       <textarea
+        name="description"
+        id="description"
         placeholder="Description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         required
       />
-      <select value={status} onChange={(e) => setStatus(e.target.value)}>
+      <select name="status" id="status" value={status} onChange={(e) => setStatus(e.target.value)}>
         <option>Pending</option>
         <option>In Progress</option>
         <option>Completed</option>
       </select>
       <input
         type="date"
+        name="dueDate"
+        id="dueDate"
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
         required

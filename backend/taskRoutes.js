@@ -4,18 +4,10 @@ const Task = require('./taskModel');
 const auth = require('./auth');
 const { body, validationResult } = require('express-validator');
 
-// Validation rules for task
-const taskValidationRules = () => [
-  body('title').notEmpty().withMessage('Title is required'),
-  body('description').notEmpty().withMessage('Description is required'),
-  body('status').optional().isIn(['Pending', 'In Progress', 'Completed']),
-  body('dueDate').isISO8601().withMessage('Valid due date required')
-];
-
-// GET all tasks
+// GET all tasks (no userId filter for demo)
 router.get('/', auth, async (req, res) => {
   try {
-    const tasks = await Task.find({ userId: req.userId }).sort({ createdAt: -1 });
+    const tasks = await Task.find().sort({ createdAt: -1 });
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -25,7 +17,7 @@ router.get('/', auth, async (req, res) => {
 // GET single task
 router.get('/:id', auth, async (req, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.id, userId: req.userId });
+    const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
     res.json(task);
   } catch (error) {
@@ -34,11 +26,13 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // POST new task
-router.post('/', auth, taskValidationRules(), async (req, res) => {
+router.post('/', auth, [
+  body('title').notEmpty().withMessage('Title required'),
+  body('description').notEmpty().withMessage('Description required'),
+  body('dueDate').isISO8601().withMessage('Valid due date required')
+], async (req, res) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
   const task = new Task({
     userId: req.userId,
     title: req.body.title,
@@ -55,18 +49,23 @@ router.post('/', auth, taskValidationRules(), async (req, res) => {
 });
 
 // PUT update task
-router.put('/:id', auth, taskValidationRules(), async (req, res) => {
+router.put('/:id', auth, [
+  body('title').optional().notEmpty(),
+  body('description').optional().notEmpty(),
+  body('dueDate').optional().isISO8601(),
+  body('status').optional().isIn(['Pending', 'In Progress', 'Completed'])
+], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    const task = await Task.findOne({ _id: req.params.id, userId: req.userId });
+    const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
-    task.title = req.body.title;
-    task.description = req.body.description;
-    task.status = req.body.status;
-    task.dueDate = req.body.dueDate;
+    task.title = req.body.title || task.title;
+    task.description = req.body.description || task.description;
+    task.status = req.body.status || task.status;
+    task.dueDate = req.body.dueDate || task.dueDate;
     const updatedTask = await task.save();
     res.json(updatedTask);
   } catch (error) {
@@ -77,7 +76,7 @@ router.put('/:id', auth, taskValidationRules(), async (req, res) => {
 // DELETE task
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.id, userId: req.userId });
+    const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
     await task.deleteOne();
     res.json({ message: 'Task deleted' });

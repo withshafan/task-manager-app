@@ -6,23 +6,24 @@ function TaskList({ onEdit, refresh, setRefresh }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
-  useEffect(() => {
-    loadTasks();
-  }, [refresh]);
-
   const loadTasks = async () => {
     try {
       const response = await getTasks();
+      console.log('Tasks loaded:', response.data);
       setTasks(response.data);
     } catch (error) {
       console.error('Error loading tasks:', error);
     }
   };
 
+  useEffect(() => {
+    loadTasks();
+  }, [refresh]); // This runs whenever `refresh` changes
+
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure?')) {
       await deleteTask(id);
-      setRefresh(!refresh);
+      setRefresh(!refresh); // Trigger reload
     }
   };
 
@@ -43,6 +44,9 @@ function TaskList({ onEdit, refresh, setRefresh }) {
     <div className="task-list">
       <h2>Your Tasks</h2>
       
+      {/* Manual refresh button for debugging */}
+      <button onClick={() => setRefresh(!refresh)} style={{ marginBottom: '10px' }}>⟳ Refresh</button>
+
       {/* Progress Bar */}
       <div className="progress-container">
         <div className="progress-bar" style={{ width: `${progressPercent}%` }}></div>
@@ -65,11 +69,7 @@ function TaskList({ onEdit, refresh, setRefresh }) {
         </select>
       </div>
 
-      {filteredTasks.length === 0 && (
-  <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
-    📭 No tasks yet. Create your first task above!
-  </div>
-)}
+      {filteredTasks.length === 0 && <p>No tasks match your criteria.</p>}
       {filteredTasks.map((task) => (
         <div key={task._id} className="task-card">
           <h3>{task.title}</h3>
