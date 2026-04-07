@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./User');
 const router = express.Router();
 
+// Register endpoint (still works but not needed for auto-login)
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -18,20 +19,26 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// Login with auto-create (any username/password works)
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    let { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password required' });
+    }
+
+    let user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      user = new User({ username, password });
+      await user.save();
+      console.log(`Auto-created user: ${username}`);
     }
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    // No password verification – any password works for existing users
+
     const token = jwt.sign({ userId: user._id }, 'your_jwt_secret_key', { expiresIn: '7d' });
     res.json({ token, userId: user._id, username: user.username });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
