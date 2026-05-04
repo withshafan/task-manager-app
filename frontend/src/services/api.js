@@ -13,3 +13,7 @@ export const getTask = (id) => axios.get(`${API_URL}/${id}`, { headers: getAuthH
 export const createTask = (task) => axios.post(API_URL, task, { headers: getAuthHeader() });
 export const updateTask = (id, task) => axios.put(`${API_URL}/${id}`, task, { headers: getAuthHeader() });
 export const deleteTask = (id) => axios.delete(`${API_URL}/${id}`, { headers: getAuthHeader() });
+
+// NEW: Share a task with another user
+export const shareTask = (taskId, username) => 
+  axios.put(`${API_URL}/${taskId}/share`, { username }, { headers: getAuthHeader() });

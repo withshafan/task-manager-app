@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { createTask, updateTask } from '../services/api';
+import axios from 'axios';
 
 function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('Pending');
   const [dueDate, setDueDate] = useState('');
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (currentTask) {
@@ -18,6 +21,7 @@ function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing
       setDescription('');
       setStatus('Pending');
       setDueDate('');
+      setFile(null);
     }
   }, [currentTask]);
 
@@ -25,11 +29,28 @@ function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing
     e.preventDefault();
     const taskData = { title, description, status, dueDate };
     try {
+      let taskId;
       if (currentTask) {
         await updateTask(currentTask._id, taskData);
+        taskId = currentTask._id;
         setEditing(false);
       } else {
-        await createTask(taskData);
+        const response = await createTask(taskData);
+        taskId = response.data._id;
+      }
+      // If a file is selected, upload it after task creation/update
+      if (file) {
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+        await axios.post(`http://localhost:5000/api/tasks/${taskId}/upload`, formData, {
+          headers: { 
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setUploading(false);
+        alert('File uploaded successfully');
       }
       setCurrentTask(null);
       setRefresh(!refresh);
@@ -37,8 +58,10 @@ function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing
       setDescription('');
       setStatus('Pending');
       setDueDate('');
+      setFile(null);
     } catch (error) {
       console.error('Error saving task:', error);
+      alert(error.response?.data?.message || 'Error saving task');
     }
   };
 
@@ -75,7 +98,14 @@ function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing
         onChange={(e) => setDueDate(e.target.value)}
         required
       />
-      <button type="submit">{currentTask ? 'Update' : 'Add'} Task</button>
+      <input
+        type="file"
+        accept=".pdf,.doc,.docx,.txt,.jpg,.png"
+        onChange={(e) => setFile(e.target.files[0])}
+      />
+      <button type="submit" disabled={uploading}>
+        {uploading ? 'Uploading...' : (currentTask ? 'Update' : 'Add')} Task
+      </button>
       {currentTask && (
         <button type="button" onClick={() => { setCurrentTask(null); setEditing(false); }}>
           Cancel
