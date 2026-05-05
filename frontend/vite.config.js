@@ -9,7 +9,23 @@ export default defineConfig({
     setupFiles: './src/test/setup.js',
   },
   server: {
-    host: 'localhost',
-    port: 5173
+    host: '0.0.0.0',
+    port: 5000,
+    allowedHosts: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/uploads': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/socket.io': {
+        target: 'http://localhost:3000',
+        ws: true,
+        changeOrigin: true,
+      }
+    }
   }
 })

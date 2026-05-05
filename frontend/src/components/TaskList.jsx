@@ -97,7 +97,7 @@ function TaskList({ onEdit, refresh, setRefresh }) {
                 <strong>Attachments:</strong>
                 {task.attachments.map(att => (
                   <div key={att._id}>
-                    <a href={`http://localhost:5000${att.filePath}`} target="_blank" rel="noopener noreferrer">
+                    <a href={att.filePath} target="_blank" rel="noopener noreferrer">
                       📎 {att.originalName}
                     </a>
                   </div>

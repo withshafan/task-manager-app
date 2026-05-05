@@ -9,7 +9,7 @@ function NotificationBell({ userId, token, refreshFlag }) {
   const fetchNotifications = async () => {
     if (!token) return;
     try {
-      const res = await axios.get('http://localhost:5000/api/notifications', {
+      const res = await axios.get('/api/notifications', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotifications(res.data);
@@ -22,7 +22,7 @@ function NotificationBell({ userId, token, refreshFlag }) {
 
   const markAsRead = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/notifications/${id}/read`, {}, {
+      await axios.put(`/api/notifications/${id}/read`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchNotifications();

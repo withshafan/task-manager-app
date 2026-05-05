@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/tasks';
+const API_URL = '/api/tasks';
 
 // Add token to every request
 const getAuthHeader = () => {

@@ -10,8 +10,8 @@ function Login({ setToken, setUserId, setUsername }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = isLogin 
-      ? 'http://localhost:5000/api/auth/login' 
-      : 'http://localhost:5000/api/auth/register';
+      ? '/api/auth/login' 
+      : '/api/auth/register';
     try {
       const res = await axios.post(url, { username, password });
       if (isLogin) {

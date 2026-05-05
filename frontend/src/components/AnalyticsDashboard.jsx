@@ -9,7 +9,7 @@ function AnalyticsDashboard({ token }) {
 
   const fetchOverview = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/analytics/overview', {
+      const res = await axios.get('/api/analytics/overview', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOverview(res.data);
@@ -20,7 +20,7 @@ function AnalyticsDashboard({ token }) {
 
   const fetchTrends = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/analytics/trends?period=${period}`, {
+      const res = await axios.get(`/api/analytics/trends?period=${period}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrends(res.data);

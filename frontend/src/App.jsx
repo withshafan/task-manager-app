@@ -31,7 +31,7 @@ function App() {
 
   useEffect(() => {
     if (token && userId) {
-      socket = io('http://localhost:5000');
+      socket = io('/', { path: '/socket.io' });
       socket.emit('register', userId);
       socket.on('notification', (notification) => {
         alert(`🔔 ${notification.message}`);

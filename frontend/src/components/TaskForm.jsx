@@ -43,7 +43,7 @@ function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing
         setUploading(true);
         const formData = new FormData();
         formData.append('file', file);
-        await axios.post(`http://localhost:5000/api/tasks/${taskId}/upload`, formData, {
+        await axios.post(`/api/tasks/${taskId}/upload`, formData, {
           headers: { 
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${localStorage.getItem('token')}`
