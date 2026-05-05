@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const http = require('http');
@@ -9,7 +9,7 @@ const taskRoutes = require('./taskRoutes');
 const authRoutes = require('./authRoutes');
 const notificationRoutes = require('./notificationRoutes');
 const analyticsRoutes = require('./analyticsRoutes');
-const uploadRoutes = require('./uploadRoutes');   // <-- ADDED
+const uploadRoutes = require('./uploadRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -26,7 +26,7 @@ const io = new Server(server, {
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));   // <-- ADDED: serve uploaded files
+app.use('/uploads', express.static('uploads'));
 app.set('io', io);
 
 // Database connection
@@ -34,12 +34,12 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log('MongoDB connection error:', err));
 
-// Routes
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
-app.use('/api/tasks', uploadRoutes);   // <-- ADDED: mount upload routes
+app.use('/api/tasks', uploadRoutes);
 
 // Socket.IO
 io.on('connection', (socket) => {

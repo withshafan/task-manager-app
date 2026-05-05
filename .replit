@@ -1,16 +1,8 @@
-modules = ["nodejs-20", "web"]
+run = "node backend/server.js"
+modules = ["nodejs-20"]
+
 [agent]
 expertMode = true
-stack = "BEST_EFFORT_FALLBACK"
-
-[nix]
-channel = "stable-25_05"
-
-[userenv]
-
-[userenv.shared]
-BACKEND_PORT = "3000"
-NODE_ENV = "development"
 
 [workflows]
 runButton = "Project"
@@ -44,22 +36,9 @@ outputType = "webview"
 name = "Backend API"
 author = "agent"
 
-[workflows.workflow.metadata]
-outputType = "console"
-
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && npm start"
 
-[[ports]]
-localPort = 3000
-externalPort = 3000
-
-[[ports]]
-localPort = 5000
-externalPort = 80
-
-[deployment]
-deploymentTarget = "vm"
-run = ["bash", "-c", "cd backend && node server.js & cd frontend && npx vite preview --host 0.0.0.0 --port 5000"]
-build = ["bash", "-c", "cd frontend && npm install && npm run build && cd ../backend && npm install"]
+[workflows.workflow.metadata]
+outputType = "console"
