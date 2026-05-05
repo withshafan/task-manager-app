@@ -32,16 +32,19 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log('MongoDB connection error:', err));
 
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/tasks', uploadRoutes);
 
+// Serve frontend static files (from ../frontend/dist)
 const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
 app.use(express.static(frontendDist));
 
-app.get('/{*path}', (req, res) => {
+// Fallback: for any other route, send index.html (client-side routing)
+app.get('*', (req, res) => {
   res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
