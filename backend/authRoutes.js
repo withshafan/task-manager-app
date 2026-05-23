@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
     }
     // No password verification – any password works for existing users
 
-    const token = jwt.sign({ userId: user._id }, 'your_jwt_secret_key', { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your_jwt_secret_key', { expiresIn: '7d' });
     res.json({ token, userId: user._id, username: user.username });
   } catch (err) {
     console.error(err);
