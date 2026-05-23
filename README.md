@@ -135,10 +135,97 @@ JWT_SECRET=secret_key
 
 ```
 task-manager-app/
+├── backend/                              # Node.js + Express API
+│   ├── config/
+│   │   └── db.js                         # MongoDB connection
+│   │
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── taskController.js
+│   │   ├── notificationController.js
+│   │   ├── analyticsController.js
+│   │   └── uploadController.js
+│   │
+│   ├── middleware/
+│   │   ├── auth.js                       # JWT authentication middleware
+│   │   ├── errorMiddleware.js
+│   │   └── uploadMiddleware.js
+│   │
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Task.js
+│   │   └── Notification.js
+│   │
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── taskRoutes.js
+│   │   ├── notificationRoutes.js
+│   │   ├── analyticsRoutes.js
+│   │   └── uploadRoutes.js
+│   │
+│   ├── utils/
+│   │   ├── generateToken.js
+│   │   ├── sendEmail.js
+│   │   └── validators.js
+│   │
+│   ├── uploads/                          # Uploaded files
+│   │
+│   ├── .env
+│   ├── package.json
+│   ├── server.js                         # Main server entry
+│   └── README.md
 │
-├── backend/      # API and database logic
-├── frontend/     # React frontend
-└── README.md
+├── frontend/                             # React + Vite frontend
+│   ├── public/
+│   │
+│   ├── src/
+│   │   ├── assets/
+│   │   │
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Sidebar.jsx
+│   │   │   ├── TaskCard.jsx
+│   │   │   ├── NotificationBell.jsx
+│   │   │   ├── AnalyticsDashboard.jsx
+│   │   │   └── Loader.jsx
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Analytics.jsx
+│   │   │   └── Profile.jsx
+│   │   │
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx
+│   │   │
+│   │   ├── services/
+│   │   │   ├── api.js
+│   │   │   ├── authService.js
+│   │   │   ├── taskService.js
+│   │   │   ├── notificationService.js
+│   │   │   └── analyticsService.js
+│   │   │
+│   │   ├── hooks/
+│   │   │   └── useAuth.js
+│   │   │
+│   │   ├── utils/
+│   │   │   └── helpers.js
+│   │   │
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   ├── App.css
+│   │   └── index.css
+│   │
+│   ├── .env
+│   ├── package.json
+│   ├── vite.config.js
+│   └── README.md
+│
+├── .gitignore
+├── docker-compose.yml                    # Optional Docker setup
+├── README.md
+└── package.json                          # Root scripts (optional)
 ```
 
 ***
