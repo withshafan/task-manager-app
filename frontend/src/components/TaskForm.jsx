@@ -38,7 +38,6 @@ function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing
         const response = await createTask(taskData);
         taskId = response.data._id;
       }
-      // If a file is selected, upload it after task creation/update
       if (file) {
         setUploading(true);
         const formData = new FormData();
@@ -90,14 +89,19 @@ function TaskForm({ currentTask, setCurrentTask, refresh, setRefresh, setEditing
         <option>In Progress</option>
         <option>Completed</option>
       </select>
-      <input
-        type="date"
-        name="dueDate"
-        id="dueDate"
-        value={dueDate}
-        onChange={(e) => setDueDate(e.target.value)}
-        required
-      />
+
+      {/* Calendar input with custom emoji icon */}
+      <div className="date-input-wrapper">
+        <input
+          type="date"
+          name="dueDate"
+          id="dueDate"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          required
+        />
+      </div>
+
       <input
         type="file"
         accept=".pdf,.doc,.docx,.txt,.jpg,.png"

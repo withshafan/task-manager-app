@@ -1,22 +1,33 @@
-/* Global Styles - Light Mode (default) */
+/* ========== Global Variables ========== */
 :root {
   --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --app-bg: white;
-  --text-color: #333;
+  --app-bg: #ffffff;
+  --text-color: #333333;
   --header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --header-text: white;
-  --card-bg: white;
+  --header-text: #ffffff;
+  --card-bg: #ffffff;
   --card-border: #e9ecef;
-  --input-bg: white;
+  --input-bg: #ffffff;
   --input-border: #e9ecef;
   --form-bg: #f8f9fa;
   --progress-bg: #e9ecef;
-  --progress-text-bg: rgba(255,255,255,0.9);
+  --progress-text-bg: rgba(255, 255, 255, 0.9);
   --button-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --button-secondary: #6c757d;
   --delete-btn: #dc3545;
   --placeholder-color: #6c757d;
   --date-icon-filter: none;
+
+  /* Notification specific */
+  --notification-unread-bg: #e8f0fe;
+  --notification-hover: rgba(0, 0, 0, 0.05);
+  --dropdown-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+  /* Analytics */
+  --trend-btn-bg: #e0e0e0;
+  --trend-btn-active-bg: #007bff;
+  --trend-btn-text: #333;
+  --trend-btn-active-text: #fff;
 }
 
 body.dark {
@@ -31,14 +42,26 @@ body.dark {
   --input-border: #3a3a4a;
   --form-bg: #252536;
   --progress-bg: #3a3a4a;
-  --progress-text-bg: rgba(0,0,0,0.7);
+  --progress-text-bg: rgba(0, 0, 0, 0.7);
   --button-primary: linear-gradient(135deg, #4a6fa5 0%, #6c8ebf 100%);
   --button-secondary: #4a5568;
   --delete-btn: #c53030;
   --placeholder-color: #aaa;
   --date-icon-filter: invert(1) brightness(1.5);
+
+  /* Notification dark */
+  --notification-unread-bg: #2a2a4a;
+  --notification-hover: rgba(255, 255, 255, 0.05);
+  --dropdown-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+
+  /* Analytics dark */
+  --trend-btn-bg: #4a5568;
+  --trend-btn-active-bg: #3182ce;
+  --trend-btn-text: #eee;
+  --trend-btn-active-text: #fff;
 }
 
+/* ========== Base & App Container ========== */
 * {
   margin: 0;
   padding: 0;
@@ -51,6 +74,7 @@ body {
   min-height: 100vh;
   padding: 20px;
   transition: background 0.3s ease;
+  color: var(--text-color);
 }
 
 .app {
@@ -59,7 +83,7 @@ body {
   background: var(--app-bg);
   color: var(--text-color);
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   animation: fadeIn 0.5s ease;
   transition: background 0.3s ease, color 0.3s ease;
@@ -70,7 +94,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Header */
+/* ========== Header ========== */
 .app > div:first-child {
   background: var(--header-bg);
   padding: 20px 30px;
@@ -83,8 +107,8 @@ body {
 }
 
 .app > div:first-child button {
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   padding: 8px 20px;
   border-radius: 25px;
@@ -93,11 +117,11 @@ body {
 }
 
 .app > div:first-child button:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
   transform: scale(1.05);
 }
 
-/* Form Styles */
+/* ========== Form Styles ========== */
 .task-form {
   padding: 30px;
   background: var(--form-bg);
@@ -110,7 +134,6 @@ body {
   font-size: 1.5rem;
 }
 
-/* Inputs, textarea, select, and date input */
 .task-form input,
 .task-form textarea,
 .task-form select,
@@ -126,20 +149,58 @@ body {
   transition: all 0.3s;
 }
 
-/* Placeholder color */
+/* ---------- Fixed Date Input Wrapper ---------- */
+.date-input-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 8px 0 16px;
+}
+
+/* The actual date input inside the wrapper */
+.date-input-wrapper input[type="date"] {
+  margin: 0;
+  width: 100%;
+  padding-right: 45px;                /* room for the emoji + clickable area */
+  position: relative;
+  cursor: pointer;
+}
+
+/* Make the invisible native picker indicator cover the entire right side */
+.date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 45px;                       /* same as padding-right */
+  height: 100%;
+  opacity: 0;                        /* invisible but fully clickable */
+  cursor: pointer;
+}
+
+/* The emoji sits behind the indicator so clicks pass through to it */
+.date-input-wrapper::after {
+  content: "📅";
+  position: absolute;
+  right: 12px;                       /* nicely centered inside the padding */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  pointer-events: none;              /* clicks go straight to the invisible indicator */
+  color: var(--text-color);
+  opacity: 0.8;
+  z-index: 0;
+}
+
+/* Keep the focus glow consistent */
+.date-input-wrapper input[type="date"]:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
 .task-form input::placeholder,
 .task-form textarea::placeholder {
   color: var(--placeholder-color);
   opacity: 1;
 }
-
-/* Calendar icon (date picker) for WebKit browsers */
-.task-form input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: var(--date-icon-filter);
-  cursor: pointer;
-}
-
-/* For Firefox, date picker icon is not styleable, but text color is already set */
 
 .task-form input:focus,
 .task-form textarea:focus,
@@ -147,7 +208,13 @@ body {
 .task-form input[type="date"]:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Redundant now but kept for any non-wrapped date inputs */
+.date-input-wrapper input[type="date"]:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .task-form textarea {
@@ -169,14 +236,14 @@ body {
 
 .task-form button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
 .task-form button[type="button"] {
   background: var(--button-secondary);
 }
 
-/* Task List */
+/* ========== Task List ========== */
 .task-list {
   padding: 30px;
 }
@@ -195,7 +262,7 @@ body {
   height: 40px;
   width: 100%;
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .progress-bar {
@@ -258,12 +325,12 @@ body {
   padding: 20px;
   margin-bottom: 20px;
   transition: all 0.3s;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .task-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .task-card h3 {
@@ -299,14 +366,14 @@ body {
   transform: scale(1.05);
 }
 
-/* Auth Container */
+/* ========== Auth Container ========== */
 .auth-container {
   max-width: 450px;
   margin: 80px auto;
   padding: 40px;
   background: var(--app-bg);
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
@@ -362,14 +429,18 @@ body {
   margin-left: 5px;
 }
 
-/* Modal for Share */
+.auth-container input::placeholder {
+  color: var(--placeholder-color);
+}
+
+/* ========== Modal (Share) ========== */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -394,42 +465,7 @@ body {
   color: var(--text-color);
 }
 
-/* Placeholder for auth inputs */
-.auth-container input::placeholder {
-  color: var(--placeholder-color);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .app {
-    margin: 10px;
-    border-radius: 15px;
-  }
-  
-  .task-form, .task-list {
-    padding: 20px;
-  }
-  
-  .filters {
-    flex-direction: column;
-  }
-  
-  .filters input, .filters select {
-    width: 100%;
-  }
-  
-  .app > div:first-child {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
-  }
-  
-  .progress-text {
-    font-size: 0.75rem;
-    padding: 2px 8px;
-  }
-}
-/* Refresh Button */
+/* ========== Refresh Button ========== */
 .refresh-button {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -440,33 +476,72 @@ body {
   cursor: pointer;
   transition: all 0.3s;
   margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .refresh-button:hover {
   transform: translateY(-2px);
   background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Analytics Cards */
+/* ========== Analytics Dashboard ========== */
+/* ========== Analytics Dashboard (Improved & Never Hidden) ========== */
+.analytics-container {
+  padding: 30px 35px;
+}
+
+.analytics-title {
+  font-size: 2rem;
+  margin-bottom: 35px;
+  color: var(--text-color);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Stats Cards */
+.analytics-stats {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  margin-bottom: 45px;
+}
+
 .analytics-card {
   background: var(--card-bg);
-  padding: 20px;
-  border-radius: 10px;
+  padding: 28px 20px;
+  border-radius: 18px;
   text-align: center;
   flex: 1;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  min-width: 180px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  transition: transform 0.25s, box-shadow 0.25s;
+  border: 1px solid var(--card-border);
+}
+
+.analytics-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 .analytics-card h3 {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
   color: var(--text-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .analytics-number {
-  font-size: 32px;
-  font-weight: bold;
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1;
+}
+
+.total-card {
+  background: var(--card-bg);
   color: var(--text-color);
 }
 
@@ -475,7 +550,8 @@ body {
   color: white;
 }
 
-.completed-card h3, .completed-card .analytics-number {
+.completed-card h3,
+.completed-card .analytics-number {
   color: white;
 }
 
@@ -484,39 +560,116 @@ body {
   color: white;
 }
 
-.rate-card h3, .rate-card .analytics-number {
+.rate-card h3,
+.rate-card .analytics-number {
   color: white;
+}
+
+/* Chart Layout – Stack vertically */
+.analytics-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+/* Individual chart cards */
+.pie-chart-card,
+.trends-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 30px 25px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.25s;
+}
+
+.pie-chart-card:hover,
+.trends-card:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.chart-title {
+  color: var(--text-color);
+  margin-bottom: 25px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Pie chart container – give it full width, no clipping */
+.pie-chart-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Trends chart wrapper */
+.trends-chart-wrapper {
+  width: 100%;
 }
 
 /* Trend buttons */
-.trend-btn, .trend-btn-active {
-  margin-right: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
+.trend-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.trend-btn,
+.trend-btn-active {
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 600;
   border: none;
-  transition: all 0.2s;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
 }
 
 .trend-btn {
-  background: #ccc;
-  color: black;
+  background: var(--trend-btn-bg);
+  color: var(--trend-btn-text);
 }
 
 .trend-btn-active {
-  background: #007bff;
-  color: white;
+  background: var(--trend-btn-active-bg);
+  color: var(--trend-btn-active-text);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
 }
 
-/* Fix date picker calendar icon in dark mode */
-input[type="date"] {
-  color-scheme: light dark; /* Allows browser to adapt the picker icon */
+.trend-btn:hover {
+  background: var(--trend-btn-active-bg);
+  color: var(--trend-btn-active-text);
+  transform: translateY(-2px);
 }
 
-body.dark input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1) brightness(1.5);
+/* Recharts theming */
+.recharts-text,
+.recharts-cartesian-axis-tick-value {
+  fill: var(--text-color);
 }
-/* Notification Bell Styles */
+.recharts-legend-item-text {
+  color: var(--text-color) !important;
+}
+.recharts-pie-label text {
+  fill: white; /* we draw white percentage inside slices, already styled */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .analytics-container {
+    padding: 20px;
+  }
+  .analytics-stats {
+    flex-direction: column;
+  }
+  .pie-chart-card, .trends-card {
+    padding: 20px 15px;
+  }
+}
+
+/* ========== Notification Bell ========== */
 .notification-bell {
   position: relative;
   display: inline-block;
@@ -525,172 +678,153 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
 .notification-bell-button {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 28px;
   cursor: pointer;
   position: relative;
-  padding: 0;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s;
+  line-height: 1;
+}
+
+.notification-bell-button:hover {
+  background: var(--notification-hover);
 }
 
 .notification-badge {
   position: absolute;
-  top: -5px;
-  right: -10px;
-  background: red;
+  top: -4px;
+  right: -8px;
+  background: #e53e3e;
   color: white;
   border-radius: 50%;
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .notification-dropdown {
   position: absolute;
-  top: 35px;
+  top: 45px;
   right: 0;
-  width: 300px;
-  max-height: 400px;
+  width: 320px;
+  max-height: 450px;
   overflow-y: auto;
   background: var(--app-bg);
   border: 1px solid var(--card-border);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: var(--dropdown-shadow);
   z-index: 1000;
+  animation: dropdownIn 0.2s ease;
+}
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .notification-header {
-  padding: 10px;
+  padding: 15px;
   border-bottom: 1px solid var(--card-border);
-  font-weight: bold;
+  font-weight: 600;
   color: var(--text-color);
+  font-size: 1rem;
 }
 
 .notification-empty {
-  padding: 10px;
+  padding: 20px;
   color: var(--text-color);
-  opacity: 0.7;
+  opacity: 0.6;
   text-align: center;
 }
 
 .notification-item {
-  padding: 10px;
+  padding: 15px;
   border-bottom: 1px solid var(--card-border);
   cursor: pointer;
   transition: background 0.2s;
 }
 
+.notification-item:last-child {
+  border-bottom: none;
+}
+
 .notification-item.unread {
-  background: var(--notification-unread-bg, #f0f7ff);
+  background: var(--notification-unread-bg);
 }
 
 .notification-item.read {
-  background: var(--app-bg);
+  background: transparent;
 }
 
-body.dark .notification-item.unread {
-  background: #2a2a4a;
+.notification-item:hover {
+  background: var(--notification-hover);
 }
 
 .notification-message {
   color: var(--text-color);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
 }
 
 .notification-time {
   color: var(--text-color);
-  opacity: 0.6;
+  opacity: 0.55;
   font-size: 0.75rem;
 }
 
-/* Analytics Dashboard Layout */
-.analytics-container {
-  padding: 20px;
+/* ========== Fix date picker icon in dark mode (for non-wrapped inputs) ========== */
+input[type="date"] {
+  color-scheme: light dark;
 }
 
-.analytics-stats {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
+body.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.5);
 }
 
-.analytics-card {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  flex: 1;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .app {
+    margin: 10px;
+    border-radius: 15px;
+  }
 
-.analytics-card h3 {
-  color: var(--text-color);
-  margin-bottom: 10px;
-}
+  .task-form, .task-list {
+    padding: 20px;
+  }
 
-.analytics-number {
-  font-size: 32px;
-  font-weight: bold;
-  color: var(--text-color);
-}
+  .filters {
+    flex-direction: column;
+  }
 
-.completed-card {
-  background: #28a745;
-}
+  .filters input, .filters select {
+    width: 100%;
+  }
 
-.completed-card h3, .completed-card .analytics-number {
-  color: white;
-}
+  .app > div:first-child {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
 
-.rate-card {
-  background: #17a2b8;
-}
+  .progress-text {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+  }
 
-.rate-card h3, .rate-card .analytics-number {
-  color: white;
-}
+  .analytics-stats {
+    flex-direction: column;
+  }
 
-.analytics-charts {
-  display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
-}
+  .analytics-charts {
+    flex-direction: column;
+  }
 
-.pie-chart-container {
-  flex: 1;
-  min-width: 250px;
+  .notification-dropdown {
+    width: 280px;
+    right: -40px;
+  }
 }
-
-.trends-container {
-  flex: 2;
-  min-width: 300px;
-}
-
-.trend-buttons {
-  margin-bottom: 10px;
-}
-
-.trend-btn, .trend-btn-active {
-  margin-right: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-}
-
-.trend-btn {
-  background: #ccc;
-  color: black;
-}
-
-.trend-btn-active {
-  background: #007bff;
-  color: white;
-}
-
-/* Ensure pie chart labels are visible in both modes */
-.recharts-pie-label text {
-  fill: var(--text-color);
-  font-size: 12px;
-}
-
-/* Adjust for dark mode – already handled via CSS variables */

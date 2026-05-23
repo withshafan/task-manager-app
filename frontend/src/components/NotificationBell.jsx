@@ -37,11 +37,12 @@ function NotificationBell({ userId, token, refreshFlag }) {
 
   return (
     <div className="notification-bell">
-      <button 
+      <button
         onClick={() => setShowDropdown(!showDropdown)}
         className="notification-bell-button"
+        aria-label="Notifications"
       >
-        🔔
+        <span role="img" aria-hidden="true">🔔</span>
         {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
       </button>
 
@@ -52,13 +53,18 @@ function NotificationBell({ userId, token, refreshFlag }) {
             <div className="notification-empty">No notifications</div>
           ) : (
             notifications.map(notif => (
-              <div 
-                key={notif._id} 
+              <div
+                key={notif._id}
                 className={`notification-item ${notif.read ? 'read' : 'unread'}`}
                 onClick={() => markAsRead(notif._id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && markAsRead(notif._id)}
               >
                 <div className="notification-message">{notif.message}</div>
-                <small className="notification-time">{new Date(notif.createdAt).toLocaleString()}</small>
+                <small className="notification-time">
+                  {new Date(notif.createdAt).toLocaleString()}
+                </small>
               </div>
             ))
           )}
