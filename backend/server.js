@@ -5,6 +5,7 @@ const path = require('path');
 const { Server } = require('socket.io');
 const http = require('http');
 require('dotenv').config();
+console.log('MONGO_URI:', process.env.MONGO_URI); // <-- ADD THIS
 
 const taskRoutes = require('./taskRoutes');
 const authRoutes = require('./authRoutes');
@@ -53,3 +54,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 // For Vercel, we export the Express app (without listening)
 module.exports = app;
+const db = mongoose.connection;
+db.on('connecting', () => console.log('🔄 Mongoose: connecting...'));
+db.on('connected', () => console.log('✅ Mongoose: connected'));
+db.on('error', (err) => console.error('❌ Mongoose error:', err));
+db.on('disconnected', () => console.log('⚠️ Mongoose: disconnected'));
+
+mongoose.connect(process.env.MONGO_URI);
