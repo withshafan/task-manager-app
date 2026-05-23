@@ -87,6 +87,9 @@ A full-stack task management system with authentication, search, filtering, real
 ```bash
 git clone https://github.com/withshafan/task-manager-app.git
 cd task-manager-app
+```
+
+***
 
 ### Backend Setup
 
