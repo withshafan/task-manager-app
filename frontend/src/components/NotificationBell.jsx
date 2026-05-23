@@ -33,68 +33,32 @@ function NotificationBell({ userId, token, refreshFlag }) {
 
   useEffect(() => {
     fetchNotifications();
-  }, [token, refreshFlag]); // re‑fetch when refreshFlag changes
+  }, [token, refreshFlag]);
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
+    <div className="notification-bell">
       <button 
         onClick={() => setShowDropdown(!showDropdown)}
-        style={{
-          background: 'none',
-          border: 'none',
-          fontSize: '24px',
-          cursor: 'pointer',
-          position: 'relative'
-        }}
+        className="notification-bell-button"
       >
         🔔
-        {unreadCount > 0 && (
-          <span style={{
-            position: 'absolute',
-            top: '-5px',
-            right: '-10px',
-            background: 'red',
-            color: 'white',
-            borderRadius: '50%',
-            padding: '2px 6px',
-            fontSize: '12px'
-          }}>{unreadCount}</span>
-        )}
+        {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
       </button>
 
       {showDropdown && (
-        <div style={{
-          position: 'absolute',
-          top: '35px',
-          right: '0',
-          width: '300px',
-          maxHeight: '400px',
-          overflowY: 'auto',
-          background: 'white',
-          border: '1px solid #ccc',
-          borderRadius: '8px',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-          zIndex: 1000
-        }}>
-          <div style={{ padding: '10px', borderBottom: '1px solid #eee', fontWeight: 'bold' }}>
-            Notifications
-          </div>
+        <div className="notification-dropdown">
+          <div className="notification-header">Notifications</div>
           {notifications.length === 0 ? (
-            <div style={{ padding: '10px', color: '#999' }}>No notifications</div>
+            <div className="notification-empty">No notifications</div>
           ) : (
             notifications.map(notif => (
               <div 
                 key={notif._id} 
-                style={{
-                  padding: '10px',
-                  borderBottom: '1px solid #eee',
-                  background: notif.read ? '#fff' : '#f0f7ff',
-                  cursor: 'pointer'
-                }}
+                className={`notification-item ${notif.read ? 'read' : 'unread'}`}
                 onClick={() => markAsRead(notif._id)}
               >
-                <div>{notif.message}</div>
-                <small style={{ color: '#888' }}>{new Date(notif.createdAt).toLocaleString()}</small>
+                <div className="notification-message">{notif.message}</div>
+                <small className="notification-time">{new Date(notif.createdAt).toLocaleString()}</small>
               </div>
             ))
           )}

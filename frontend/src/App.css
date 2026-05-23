@@ -15,6 +15,8 @@
   --button-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --button-secondary: #6c757d;
   --delete-btn: #dc3545;
+  --placeholder-color: #6c757d;
+  --date-icon-filter: none;
 }
 
 body.dark {
@@ -33,6 +35,8 @@ body.dark {
   --button-primary: linear-gradient(135deg, #4a6fa5 0%, #6c8ebf 100%);
   --button-secondary: #4a5568;
   --delete-btn: #c53030;
+  --placeholder-color: #aaa;
+  --date-icon-filter: invert(1) brightness(1.5);
 }
 
 * {
@@ -106,9 +110,11 @@ body {
   font-size: 1.5rem;
 }
 
+/* Inputs, textarea, select, and date input */
 .task-form input,
 .task-form textarea,
-.task-form select {
+.task-form select,
+.task-form input[type="date"] {
   width: 100%;
   padding: 12px;
   margin: 8px 0 16px;
@@ -120,9 +126,25 @@ body {
   transition: all 0.3s;
 }
 
+/* Placeholder color */
+.task-form input::placeholder,
+.task-form textarea::placeholder {
+  color: var(--placeholder-color);
+  opacity: 1;
+}
+
+/* Calendar icon (date picker) for WebKit browsers */
+.task-form input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: var(--date-icon-filter);
+  cursor: pointer;
+}
+
+/* For Firefox, date picker icon is not styleable, but text color is already set */
+
 .task-form input:focus,
 .task-form textarea:focus,
-.task-form select:focus {
+.task-form select:focus,
+.task-form input[type="date"]:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
@@ -372,6 +394,11 @@ body {
   color: var(--text-color);
 }
 
+/* Placeholder for auth inputs */
+.auth-container input::placeholder {
+  color: var(--placeholder-color);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .app {
@@ -402,3 +429,268 @@ body {
     padding: 2px 8px;
   }
 }
+/* Refresh Button */
+.refresh-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.refresh-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Analytics Cards */
+.analytics-card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  flex: 1;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.analytics-card h3 {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.analytics-number {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.completed-card {
+  background: #28a745;
+  color: white;
+}
+
+.completed-card h3, .completed-card .analytics-number {
+  color: white;
+}
+
+.rate-card {
+  background: #17a2b8;
+  color: white;
+}
+
+.rate-card h3, .rate-card .analytics-number {
+  color: white;
+}
+
+/* Trend buttons */
+.trend-btn, .trend-btn-active {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.trend-btn {
+  background: #ccc;
+  color: black;
+}
+
+.trend-btn-active {
+  background: #007bff;
+  color: white;
+}
+
+/* Fix date picker calendar icon in dark mode */
+input[type="date"] {
+  color-scheme: light dark; /* Allows browser to adapt the picker icon */
+}
+
+body.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.5);
+}
+/* Notification Bell Styles */
+.notification-bell {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-bell-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: var(--app-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.notification-header {
+  padding: 10px;
+  border-bottom: 1px solid var(--card-border);
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.notification-empty {
+  padding: 10px;
+  color: var(--text-color);
+  opacity: 0.7;
+  text-align: center;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid var(--card-border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.notification-item.unread {
+  background: var(--notification-unread-bg, #f0f7ff);
+}
+
+.notification-item.read {
+  background: var(--app-bg);
+}
+
+body.dark .notification-item.unread {
+  background: #2a2a4a;
+}
+
+.notification-message {
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.notification-time {
+  color: var(--text-color);
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+/* Analytics Dashboard Layout */
+.analytics-container {
+  padding: 20px;
+}
+
+.analytics-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.analytics-card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  flex: 1;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.analytics-card h3 {
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.analytics-number {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.completed-card {
+  background: #28a745;
+}
+
+.completed-card h3, .completed-card .analytics-number {
+  color: white;
+}
+
+.rate-card {
+  background: #17a2b8;
+}
+
+.rate-card h3, .rate-card .analytics-number {
+  color: white;
+}
+
+.analytics-charts {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.pie-chart-container {
+  flex: 1;
+  min-width: 250px;
+}
+
+.trends-container {
+  flex: 2;
+  min-width: 300px;
+}
+
+.trend-buttons {
+  margin-bottom: 10px;
+}
+
+.trend-btn, .trend-btn-active {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.trend-btn {
+  background: #ccc;
+  color: black;
+}
+
+.trend-btn-active {
+  background: #007bff;
+  color: white;
+}
+
+/* Ensure pie chart labels are visible in both modes */
+.recharts-pie-label text {
+  fill: var(--text-color);
+  font-size: 12px;
+}
+
+/* Adjust for dark mode – already handled via CSS variables */

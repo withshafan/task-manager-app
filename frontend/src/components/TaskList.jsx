@@ -65,7 +65,12 @@ function TaskList({ onEdit, refresh, setRefresh }) {
   return (
     <div className="task-list">
       <h2>Your Tasks</h2>
-      <button onClick={() => setRefresh(!refresh)} style={{ marginBottom: '10px' }}>⟳ Refresh</button>
+      <button 
+        onClick={() => setRefresh(!refresh)} 
+        className="refresh-button"
+      >
+        ⟳ Refresh
+      </button>
       
       <div className="progress-container">
         <div className="progress-bar" style={{ width: `${progressPercent}%` }}></div>

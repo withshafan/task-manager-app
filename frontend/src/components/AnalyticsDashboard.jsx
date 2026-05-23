@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 
 function AnalyticsDashboard({ token }) {
   const [overview, setOverview] = useState(null);
@@ -41,37 +41,37 @@ function AnalyticsDashboard({ token }) {
   ] : [];
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="analytics-container" style={{ color: 'var(--text-color)' }}>
       <h2>Analytics Dashboard</h2>
       {overview && (
-        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginBottom: '30px' }}>
-          <div style={{ background: '#f0f0f0', padding: '20px', borderRadius: '10px', textAlign: 'center', flex: 1 }}>
+        <div className="analytics-stats">
+          <div className="analytics-card">
             <h3>Total Tasks</h3>
-            <p style={{ fontSize: '32px', fontWeight: 'bold' }}>{overview.totalTasks}</p>
+            <p className="analytics-number">{overview.totalTasks}</p>
           </div>
-          <div style={{ background: '#28a745', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', flex: 1 }}>
+          <div className="analytics-card completed-card">
             <h3>Completed</h3>
-            <p style={{ fontSize: '32px', fontWeight: 'bold' }}>{overview.completedTasks}</p>
+            <p className="analytics-number">{overview.completedTasks}</p>
           </div>
-          <div style={{ background: '#17a2b8', color: 'white', padding: '20px', borderRadius: '10px', textAlign: 'center', flex: 1 }}>
+          <div className="analytics-card rate-card">
             <h3>Completion Rate</h3>
-            <p style={{ fontSize: '32px', fontWeight: 'bold' }}>{overview.completionPercent}%</p>
+            <p className="analytics-number">{overview.completionPercent}%</p>
           </div>
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
-        <div style={{ flex: 1 }}>
+      <div className="analytics-charts">
+        <div className="pie-chart-container">
           <h3>Status Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={320}>
             <PieChart>
               <Pie
                 data={pieData}
                 cx="50%"
                 cy="50%"
-                labelLine={false}
+                labelLine={true}
                 label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                outerRadius={80}
+                outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
               >
@@ -84,19 +84,19 @@ function AnalyticsDashboard({ token }) {
           </ResponsiveContainer>
         </div>
 
-        <div style={{ flex: 2 }}>
+        <div className="trends-container">
           <h3>Task Trends</h3>
-          <div style={{ marginBottom: '10px' }}>
-            <button onClick={() => setPeriod('weekly')} style={{ marginRight: '10px', background: period === 'weekly' ? '#007bff' : '#ccc', color: period === 'weekly' ? 'white' : 'black' }}>Weekly</button>
-            <button onClick={() => setPeriod('monthly')} style={{ background: period === 'monthly' ? '#007bff' : '#ccc', color: period === 'monthly' ? 'white' : 'black' }}>Monthly</button>
+          <div className="trend-buttons">
+            <button onClick={() => setPeriod('weekly')} className={period === 'weekly' ? 'trend-btn-active' : 'trend-btn'}>Weekly</button>
+            <button onClick={() => setPeriod('monthly')} className={period === 'monthly' ? 'trend-btn-active' : 'trend-btn'}>Monthly</button>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={trends}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="period" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--text-color)" opacity="0.3" />
+              <XAxis dataKey="period" stroke="var(--text-color)" />
+              <YAxis stroke="var(--text-color)" />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-color)', border: 'none' }} />
+              <Legend wrapperStyle={{ color: 'var(--text-color)' }} />
               <Line type="monotone" dataKey="totalCreated" stroke="#8884d8" name="Tasks Created" />
               <Line type="monotone" dataKey="completedCount" stroke="#82ca9d" name="Completed" />
             </LineChart>

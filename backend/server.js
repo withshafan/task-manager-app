@@ -43,8 +43,12 @@ app.use('/api/tasks', uploadRoutes);
 const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
 app.use(express.static(frontendDist));
 
-// Fallback: for any other route, send index.html (client-side routing)
-app.get('*', (req, res) => {
+// Fallback middleware: for any request not matching API or static file, send index.html
+app.use((req, res, next) => {
+  // Skip if the request is for an API route or an existing static file (handled by previous middleware)
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+    return next();
+  }
   res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
